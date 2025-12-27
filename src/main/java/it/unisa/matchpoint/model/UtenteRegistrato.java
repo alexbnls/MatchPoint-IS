@@ -35,14 +35,15 @@ public class UtenteRegistrato {
     @Column(name = "ubicazione_predefinita", length = 100)
     private String ubicazionePred; // Preferenza indicata nel RAD [cite: 159]
 
-    // Valori di rating inizializzati a 0.0 come da specifica SDD
-    @Column(name = "rating_affidabilita", precision = 2, scale = 1)
+    // Rating con valori di default 0.0
+    // Usiamo columnDefinition per forzare il database a creare un DECIMAL(2,1)
+    @Column(name = "rating_affidabilita", columnDefinition = "DECIMAL(2,1) DEFAULT 0.0")
     private Double ratingAffidabilita = 0.0;
 
-    @Column(name = "rating_abilita", precision = 2, scale = 1)
+    @Column(name = "rating_abilita", columnDefinition = "DECIMAL(2,1) DEFAULT 0.0")
     private Double ratingAbilita = 0.0;
 
-    @Column(name = "rating_sportivita", precision = 2, scale = 1)
+    @Column(name = "rating_sportivita", columnDefinition = "DECIMAL(2,1) DEFAULT 0.0")
     private Double ratingSportivita = 0.0;
 
     @Column(length = 20)
