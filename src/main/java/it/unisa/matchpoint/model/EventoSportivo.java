@@ -40,10 +40,11 @@ public class EventoSportivo {
 
     // FIX ARCHITETTURALE: Aggiunta coordinate per REQ4 e REQ8 (Mappe/Filtri)
     // Non presenti in SDD originale, ma necessari per il funzionamento.
-    @Column(precision = 9, scale = 6)
+    // Fix per latitudine e longitudine
+    @Column(name = "latitudine", columnDefinition = "DECIMAL(9,6)")
     private Double latitudine;
 
-    @Column(precision = 9, scale = 6)
+    @Column(name = "longitudine", columnDefinition = "DECIMAL(9,6)")
     private Double longitudine;
 
     // --- PARTECIPANTI ---

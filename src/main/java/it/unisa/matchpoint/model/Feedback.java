@@ -31,17 +31,17 @@ public class Feedback {
     // --- PUNTEGGI ---
     // Mapping Decimal(1,1) SDD  e Validazione Range 1-5 TCS
 
-    @Column(name = "punteggio_abilita", nullable = false, precision = 2, scale = 1)
+    @Column(name = "punteggio_abilita", columnDefinition = "DECIMAL(2,1) DEFAULT 0.0")
     @NotNull
     @Min(1) @Max(5)
     private Double punteggioAbilita;
 
-    @Column(name = "punteggio_aff", nullable = false, precision = 2, scale = 1)
+    @Column(name = "punteggio_aff", columnDefinition = "DECIMAL(2,1) DEFAULT 0.0")
     @NotNull
     @Min(1) @Max(5)
     private Double punteggioAffidabilita;
 
-    @Column(name = "punteggio_sport", nullable = false, precision = 2, scale = 1)
+    @Column(name = "punteggio_sport", columnDefinition = "DECIMAL(2,1) DEFAULT 0.0")
     @NotNull
     @Min(1) @Max(5)
     private Double punteggioSportivita;
