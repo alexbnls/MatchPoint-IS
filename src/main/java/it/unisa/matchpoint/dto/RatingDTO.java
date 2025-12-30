@@ -10,8 +10,8 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 public class RatingDTO {
     // Usiamo BigDecimal per mappare correttamente il DECIMAL(2,1) del DB
-    private BigDecimal abilita;
-    private BigDecimal affidabilita;
-    private BigDecimal sportivita;
+    private Double abilita;
+    private Double affidabilita;
+    private Double sportivita;
     private String descrizione;
 }
