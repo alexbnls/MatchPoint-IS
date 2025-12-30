@@ -3,15 +3,18 @@ package it.unisa.matchpoint.services;
 
 import it.unisa.matchpoint.dto.EventoDTO;
 import it.unisa.matchpoint.model.EventoSportivo;
+import it.unisa.matchpoint.model.Iscrizione;
 import it.unisa.matchpoint.model.StatoEvento;
 import it.unisa.matchpoint.model.UtenteRegistrato;
 import it.unisa.matchpoint.repository.EventoRepository;
+import it.unisa.matchpoint.repository.IscrizioneRepository;
 import it.unisa.matchpoint.repository.UtenteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 public class GestioneEventoService {
@@ -24,6 +27,9 @@ public class GestioneEventoService {
 
     @Autowired
     private MappeServiceFacade mappeFacade; // Il Design Pattern in azione
+
+    @Autowired
+    private IscrizioneRepository iscrizioneRepository; // <--- SERVE PER L'OBSERVER!
 
     @Transactional
     public EventoSportivo creaEvento(EventoDTO eventoDTO, String emailOrganizzatore) {
@@ -86,17 +92,28 @@ public class GestioneEventoService {
         EventoSportivo evento = eventoRepository.findById(idEvento)
                 .orElseThrow(() -> new IllegalArgumentException("Evento non trovato"));
 
-        // Verifica che sia l'organizzatore a cancellare (DG4 - Separazione Privilegi)
+        // Verifica Security
         if (!evento.getOrganizzatore().getEmail().equals(emailRichiedente)) {
-            throw new SecurityException("Non sei autorizzato ad annullare questo evento"); //
+            throw new SecurityException("Non sei autorizzato ad annullare questo evento");
         }
 
-        // Cambio di stato (Statechart transition)
+        // Verifica Stato
+        if (evento.getStato() == StatoEvento.TERMINATO || evento.getStato() == StatoEvento.ANNULLATO) {
+            throw new IllegalArgumentException("L'evento non può essere annullato in questo stato");
+        }
+
+        // 1. STATE CHANGE (Il Subject cambia stato)
         evento.setStato(StatoEvento.ANNULLATO);
         eventoRepository.save(evento);
 
-        // Pattern Observer: Notifica automatica agli iscritti
-        // Nota: Questo metodo deve essere presente nell'Entity EventoSportivo
-        // evento.notificaOsservatori(); //
+        // 2. NOTIFY OBSERVERS (Logica manuale perché siamo in un Service Layer)
+        // Recuperiamo la lista degli iscritti (Observer)
+        List<Iscrizione> osservatori = iscrizioneRepository.findByEventoId(idEvento);
+
+        for (Iscrizione iscrizione : osservatori) {
+            UtenteRegistrato utente = iscrizione.getUtente();
+            // Simulazione invio notifica (Email/Push)
+            System.out.println("NOTIFICA a " + utente.getEmail() + ": L'evento è stato annullato.");
+        }
     }
 }
