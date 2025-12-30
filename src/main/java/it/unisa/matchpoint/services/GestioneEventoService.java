@@ -22,6 +22,8 @@ public class GestioneEventoService {
     @Autowired
     private UtenteRepository utenteRepository;
 
+    @Autowired
+    private MappeServiceFacade mappeFacade; // Il Design Pattern in azione
 
     @Transactional
     public EventoSportivo creaEvento(EventoDTO eventoDTO, String emailOrganizzatore) {
@@ -50,6 +52,15 @@ public class GestioneEventoService {
         UtenteRegistrato organizzatore = utenteRepository.findById(emailOrganizzatore)
                 .orElseThrow(() -> new IllegalArgumentException("Errato: Organizzatore non valido"));
 
+
+        Double[] coordinate;
+        try {
+            coordinate = mappeFacade.getCoordinate(eventoDTO.getLuogo());
+        } catch (RuntimeException e) {
+            // Se il Facade fallisce (indirizzo non trovato dalle API), blocchiamo la creazione
+            throw new IllegalArgumentException("Indirizzo non trovato sulle mappe");
+        }
+
         // Creazione Entity e settaggio stato iniziale (REQ6)
         EventoSportivo nuovoEvento = new EventoSportivo();
         nuovoEvento.setSport(eventoDTO.getSport());
@@ -57,7 +68,8 @@ public class GestioneEventoService {
         nuovoEvento.setLuogo(eventoDTO.getLuogo());
         nuovoEvento.setNPartMax(eventoDTO.getNPartMax());
         nuovoEvento.setOrganizzatore(organizzatore);
-
+        nuovoEvento.setLatitudine(coordinate[0]);
+        nuovoEvento.setLongitudine(coordinate[1]);
         // Impostiamo lo stato iniziale come da Statechart (REQ6)
         nuovoEvento.setStato(StatoEvento.IN_ATTESA_DI_PARTECIPANTI);
         nuovoEvento.setNPartAttuali(0);
