@@ -1,0 +1,73 @@
+package it.unisa.matchpoint.services;
+
+import it.unisa.matchpoint.dto.UtenteDTO;
+import it.unisa.matchpoint.model.UtenteRegistrato;
+import it.unisa.matchpoint.repository.UtenteRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Optional;
+
+@Service
+public class GestioneUtenteService {
+
+    @Autowired
+    private UtenteRepository utenteRepository;
+
+    @Transactional
+    public UtenteRegistrato registraUtente(UtenteDTO datiUtente) {
+
+        // 1. Controllo Formato Nome [FNO] - TC_UC1_1
+        if (!datiUtente.getNome().matches("^[A-Za-z\\s']{2,30}$")) {
+            throw new IllegalArgumentException("Errato: Formato nome non valido");
+        }
+
+        // 2. Controllo Formato Cognome [FCO] - TC_UC1_2
+        if (!datiUtente.getCognome().matches("^[A-Za-z\\s']{2,30}$")) {
+            throw new IllegalArgumentException("Errato: Formato cognome non valido");
+        }
+
+        // 3. Controllo Formato Email [FE] - TC_UC1_3
+        if (!datiUtente.getEmail().matches("^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,10}$")) {
+            throw new IllegalArgumentException("Errato: Formato email non valido");
+        }
+
+        // 4. Controllo Disponibilità Email [DE] - TC_UC1_4
+        if (utenteRepository.existsByEmail(datiUtente.getEmail())) {
+            throw new IllegalArgumentException("Errato: Email già in uso");
+        }
+
+        // 5. Controllo Validità Password [VP] - TC_UC1_5
+        if (!datiUtente.getPassword().matches("^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{8,}$")) {
+            throw new IllegalArgumentException("Errato: Password debole");
+        }
+
+        // 6. Controllo Match Password [MP] - TC_UC1_6
+        if (!datiUtente.getPassword().equals(datiUtente.getConfermaPassword())) {
+            throw new IllegalArgumentException("Errato: Le password non coincidono");
+        }
+
+        // 7. Esito Corretto - TC_UC1_7
+        UtenteRegistrato utente = new UtenteRegistrato();
+        utente.setEmail(datiUtente.getEmail());
+        utente.setNome(datiUtente.getNome());
+        utente.setCognome(datiUtente.getCognome());
+        utente.setPassword(datiUtente.getPassword());
+        utente.setRuolo("utente");
+
+        return utenteRepository.save(utente);
+    }
+
+    public UtenteRegistrato login(String email, String password) {
+        // Recupera l'utente dal DB
+        Optional<UtenteRegistrato> utente = utenteRepository.findById(email);
+
+        // Verifica esistenza e corrispondenza password
+        if (utente.isPresent() && utente.get().getPassword().equals(password)) {
+            return utente.get();
+        } else {
+            throw new IllegalArgumentException("Errore: Credenziali non valide");
+        }
+    }
+}

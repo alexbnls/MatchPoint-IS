@@ -94,11 +94,3 @@ public class EventoSportivo {
     }
 }
 
-// Enum per i 5 stati definiti nel Dizionario dei Dati SDD
-enum StatoEvento {
-    IN_CREAZIONE,
-    IN_ATTESA_DI_PARTECIPANTI,
-    CONFERMATO,
-    TERMINATO,
-    ANNULLATO
-}
