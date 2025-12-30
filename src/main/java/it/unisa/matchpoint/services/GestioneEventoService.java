@@ -1,6 +1,5 @@
 package it.unisa.matchpoint.services;
 
-package it.unisa.matchpoint.service;
 
 import it.unisa.matchpoint.dto.EventoDTO;
 import it.unisa.matchpoint.model.EventoSportivo;
