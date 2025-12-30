@@ -10,7 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Optional;
 
 @Service
-public class GestioneUtenteService {
+public class GestioneUtentiService {
 
     @Autowired
     private UtenteRepository utenteRepository;
