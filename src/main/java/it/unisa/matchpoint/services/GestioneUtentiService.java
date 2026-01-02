@@ -39,7 +39,7 @@ public class GestioneUtentiService {
         }
 
         // 5. Controllo Validità Password [VP] - TC_UC1_5
-        if (!datiUtente.getPassword().matches("^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{8,}$")) {
+        if (!datiUtente.getPassword().matches("^(?=.*[A-Za-z])(?=.*\\d).{8,}$")) {
             throw new IllegalArgumentException("Errato: Password debole");
         }
 
@@ -55,6 +55,7 @@ public class GestioneUtentiService {
         utente.setCognome(datiUtente.getCognome());
         utente.setPassword(datiUtente.getPassword());
         utente.setRuolo("utente");
+        utente.setUbicazionePred(datiUtente.getUbicazionePred());
 
         return utenteRepository.save(utente);
     }
