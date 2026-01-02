@@ -31,6 +31,9 @@ public class GestioneEventoService {
     @Autowired
     private IscrizioneRepository iscrizioneRepository; // <--- SERVE PER L'OBSERVER!
 
+    @Autowired
+    private EmailService emailService; // Iniettiamo l'interfaccia
+
     @Transactional
     public EventoSportivo creaEvento(EventoDTO eventoDTO, String emailOrganizzatore) {
 
@@ -134,8 +137,12 @@ public class GestioneEventoService {
 
         for (Iscrizione iscrizione : osservatori) {
             UtenteRegistrato utente = iscrizione.getUtente();
-            // Simulazione invio notifica (Email/Push)
-            System.out.println("NOTIFICA a " + utente.getEmail() + ": L'evento è stato annullato.");
+
+            emailService.inviaEmail(
+                    utente.getEmail(),
+                    "Evento Annullato",
+                    "Ciao " + utente.getNome() + ", l'evento " + evento.getSport() + " è stato annullato."
+            );
         }
     }
 }

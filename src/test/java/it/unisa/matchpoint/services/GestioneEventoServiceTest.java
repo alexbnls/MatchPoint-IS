@@ -30,6 +30,7 @@ class GestioneEventoServiceTest {
     @Mock private UtenteRepository utenteRepository;
     @Mock private IscrizioneRepository iscrizioneRepository;
     @Mock private MappeServiceFacade mappeFacade;
+    @Mock private EmailService emailService;
 
     @InjectMocks
     private GestioneEventoService service;
@@ -130,5 +131,6 @@ class GestioneEventoServiceTest {
         assertEquals(StatoEvento.ANNULLATO, evento.getStato());
         verify(eventoRepository).save(evento);
         verify(iscrizioneRepository).findByEventoId(1);
+        verify(emailService).inviaEmail(eq("user1@test.com"), anyString(), anyString());
     }
 }
