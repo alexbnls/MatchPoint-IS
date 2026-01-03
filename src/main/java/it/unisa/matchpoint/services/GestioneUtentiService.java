@@ -64,6 +64,7 @@ public class GestioneUtentiService {
 
         return utenteRepository.save(utente);
     }
+
     private String hashPassword(String passwordInChiaro) {
         try {
             MessageDigest digest = MessageDigest.getInstance("SHA-256");
@@ -74,6 +75,7 @@ public class GestioneUtentiService {
             throw new RuntimeException("Errore critico durante l'hashing della password", e);
         }
     }
+
     public UtenteRegistrato login(String email, String password) {
         // Recupera l'utente dal DB
         Optional<UtenteRegistrato> utente = utenteRepository.findById(email);
@@ -90,4 +92,4 @@ public class GestioneUtentiService {
         // Se l'utente non c'è o la password non coincide
         throw new IllegalArgumentException("Errore: Credenziali non valide");
     }
-    }
+}

@@ -4,7 +4,9 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Table(
@@ -33,17 +35,20 @@ public class Feedback {
 
     @Column(name = "punteggio_abilita", columnDefinition = "DECIMAL(2,1) DEFAULT 0.0")
     @NotNull
-    @Min(1) @Max(5)
+    @Min(1)
+    @Max(5)
     private Double punteggioAbilita;
 
     @Column(name = "punteggio_aff", columnDefinition = "DECIMAL(2,1) DEFAULT 0.0")
     @NotNull
-    @Min(1) @Max(5)
+    @Min(1)
+    @Max(5)
     private Double punteggioAffidabilita;
 
     @Column(name = "punteggio_sport", columnDefinition = "DECIMAL(2,1) DEFAULT 0.0")
     @NotNull
-    @Min(1) @Max(5)
+    @Min(1)
+    @Max(5)
     private Double punteggioSportivita;
 
     // Impostato come NULLABLE perché definito "opzionale".

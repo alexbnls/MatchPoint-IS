@@ -17,17 +17,22 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class GestioneValutazioneServiceTest {
 
-    @Mock private FeedbackRepository feedbackRepository;
-    @Mock private UtenteRepository utenteRepository;
-    @Mock private EventoRepository eventoRepository;
-    @Mock private IscrizioneRepository iscrizioneRepository;
+    @Mock
+    private FeedbackRepository feedbackRepository;
+    @Mock
+    private UtenteRepository utenteRepository;
+    @Mock
+    private EventoRepository eventoRepository;
+    @Mock
+    private IscrizioneRepository iscrizioneRepository;
 
     @InjectMocks
     private GestioneValutazioneService service;
