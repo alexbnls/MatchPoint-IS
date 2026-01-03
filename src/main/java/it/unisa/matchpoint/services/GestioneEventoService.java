@@ -62,14 +62,12 @@ public class GestioneEventoService {
         Double lonFinale;
 
         // CASO A: L'utente ha mandato le COORDINATE (Click su mappa)
-        if (eventoDTO.getLatitudine() != null && eventoDTO.getLongitudine() != null) {
+        if (eventoDTO.getLatitudine() != null && eventoDTO.getLongitudine() != null
+                && (Math.abs(eventoDTO.getLatitudine()) > 0.001 || Math.abs(eventoDTO.getLongitudine()) > 0.001)) {
+
             latFinale = eventoDTO.getLatitudine();
             lonFinale = eventoDTO.getLongitudine();
-
-            // Usiamo il Facade per ottenere l'indirizzo (Reverse Geocoding)
             indirizzoFinale = mappeFacade.getIndirizzoDaCoordinate(latFinale, lonFinale);
-
-            // Qui NON serve validare la regex, perché l'indirizzo ce lo dà OpenStreetMap ed è fidato.
         }
 
         // CASO B: L'utente ha mandato l'INDIRIZZO (Testo)

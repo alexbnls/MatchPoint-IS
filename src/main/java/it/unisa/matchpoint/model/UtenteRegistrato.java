@@ -23,8 +23,6 @@ public class UtenteRegistrato {
     private String email;
 
     @Column(nullable = false)
-    // Regex validazione password da specifica Test Case [cite: 21]
-    @Pattern(regexp = "^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{8,}$")
     private String password;
 
     @Column(nullable = false, length = 50) // Lunghezza da Dizionario Dati
