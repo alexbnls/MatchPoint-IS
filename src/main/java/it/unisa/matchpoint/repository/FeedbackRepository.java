@@ -1,7 +1,6 @@
 package it.unisa.matchpoint.repository;
 
 import it.unisa.matchpoint.model.Feedback;
-import it.unisa.matchpoint.model.UtenteRegistrato;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

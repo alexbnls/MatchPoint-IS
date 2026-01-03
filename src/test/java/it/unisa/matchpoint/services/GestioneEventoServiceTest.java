@@ -19,18 +19,24 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class GestioneEventoServiceTest {
 
-    @Mock private EventoRepository eventoRepository;
-    @Mock private UtenteRepository utenteRepository;
-    @Mock private IscrizioneRepository iscrizioneRepository;
-    @Mock private MappeServiceFacade mappeFacade;
-    @Mock private EmailService emailService;
+    @Mock
+    private EventoRepository eventoRepository;
+    @Mock
+    private UtenteRepository utenteRepository;
+    @Mock
+    private IscrizioneRepository iscrizioneRepository;
+    @Mock
+    private MappeServiceFacade mappeFacade;
+    @Mock
+    private EmailService emailService;
 
     @InjectMocks
     private GestioneEventoService service;
@@ -116,8 +122,10 @@ class GestioneEventoServiceTest {
         evento.setOrganizzatore(organizzatore);
         evento.setSport("Tennis");
 
-        UtenteRegistrato u1 = new UtenteRegistrato(); u1.setEmail("user1@test.com");
-        Iscrizione i1 = new Iscrizione(); i1.setUtente(u1);
+        UtenteRegistrato u1 = new UtenteRegistrato();
+        u1.setEmail("user1@test.com");
+        Iscrizione i1 = new Iscrizione();
+        i1.setUtente(u1);
 
         List<Iscrizione> osservatori = List.of(i1);
 

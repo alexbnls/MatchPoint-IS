@@ -7,6 +7,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.util.Base64;
 import java.util.Optional;
 
 @Service
@@ -53,11 +57,23 @@ public class GestioneUtentiService {
         utente.setEmail(datiUtente.getEmail());
         utente.setNome(datiUtente.getNome());
         utente.setCognome(datiUtente.getCognome());
-        utente.setPassword(datiUtente.getPassword());
+        String passwordCifrata = hashPassword(datiUtente.getPassword());
+        utente.setPassword(passwordCifrata);
         utente.setRuolo("utente");
         utente.setUbicazionePred(datiUtente.getUbicazionePred());
 
         return utenteRepository.save(utente);
+    }
+
+    private String hashPassword(String passwordInChiaro) {
+        try {
+            MessageDigest digest = MessageDigest.getInstance("SHA-256");
+            byte[] hash = digest.digest(passwordInChiaro.getBytes(StandardCharsets.UTF_8));
+            // Convertiamo i byte in una stringa leggibile
+            return Base64.getEncoder().encodeToString(hash);
+        } catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException("Errore critico durante l'hashing della password", e);
+        }
     }
 
     public UtenteRegistrato login(String email, String password) {
@@ -65,10 +81,15 @@ public class GestioneUtentiService {
         Optional<UtenteRegistrato> utente = utenteRepository.findById(email);
 
         // Verifica esistenza e corrispondenza password
-        if (utente.isPresent() && utente.get().getPassword().equals(password)) {
-            return utente.get();
-        } else {
-            throw new IllegalArgumentException("Errore: Credenziali non valide");
+        if (utente.isPresent()) {
+            String passwordInseritaHash = hashPassword(password);
+
+            if (utente.get().getPassword().equals(passwordInseritaHash)) {
+                return utente.get();
+            }
         }
+
+        // Se l'utente non c'è o la password non coincide
+        throw new IllegalArgumentException("Errore: Credenziali non valide");
     }
 }

@@ -5,7 +5,10 @@ import it.unisa.matchpoint.model.Feedback;
 import it.unisa.matchpoint.services.GestioneValutazioneService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Map;
 
@@ -69,7 +72,11 @@ public class GestioneValutazioneController {
         if (value instanceof Integer) return ((Integer) value).doubleValue();
         if (value instanceof Double) return (Double) value;
         if (value instanceof String) {
-            try { return Double.parseDouble((String) value); } catch (NumberFormatException e) { return null; }
+            try {
+                return Double.parseDouble((String) value);
+            } catch (NumberFormatException e) {
+                return null;
+            }
         }
         return null;
     }

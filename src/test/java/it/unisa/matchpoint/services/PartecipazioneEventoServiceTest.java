@@ -1,7 +1,12 @@
 package it.unisa.matchpoint.services;
 
-import it.unisa.matchpoint.model.*;
-import it.unisa.matchpoint.repository.*;
+import it.unisa.matchpoint.model.EventoSportivo;
+import it.unisa.matchpoint.model.Iscrizione;
+import it.unisa.matchpoint.model.StatoEvento;
+import it.unisa.matchpoint.model.UtenteRegistrato;
+import it.unisa.matchpoint.repository.EventoRepository;
+import it.unisa.matchpoint.repository.IscrizioneRepository;
+import it.unisa.matchpoint.repository.UtenteRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -12,16 +17,20 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class PartecipazioneEventoServiceTest {
 
-    @Mock private IscrizioneRepository iscrizioneRepository;
-    @Mock private EventoRepository eventoRepository;
-    @Mock private UtenteRepository utenteRepository;
+    @Mock
+    private IscrizioneRepository iscrizioneRepository;
+    @Mock
+    private EventoRepository eventoRepository;
+    @Mock
+    private UtenteRepository utenteRepository;
 
     @InjectMocks
     private PartecipazioneEventoService service;
