@@ -80,8 +80,6 @@ public class GestioneUtentiService {
 
         // Verifica esistenza e corrispondenza password
         if (utente.isPresent()) {
-            // --- MODIFICA SICUREZZA: CHECK HASH ---
-            // Dobbiamo cifrare la password inserita ora per vedere se coincide con quella cifrata nel DB
             String passwordInseritaHash = hashPassword(password);
 
             if (utente.get().getPassword().equals(passwordInseritaHash)) {
