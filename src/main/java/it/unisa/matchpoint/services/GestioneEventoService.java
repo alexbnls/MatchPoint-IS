@@ -31,6 +31,9 @@ public class GestioneEventoService {
     @Autowired
     private IscrizioneRepository iscrizioneRepository; // <--- SERVE PER L'OBSERVER!
 
+    @Autowired
+    private EmailService emailService; // Iniettiamo l'interfaccia
+
     @Transactional
     public EventoSportivo creaEvento(EventoDTO eventoDTO, String emailOrganizzatore) {
 
@@ -49,33 +52,55 @@ public class GestioneEventoService {
             throw new IllegalArgumentException("Errato: Nome sport troppo breve o lungo");
         }
 
-        // 4. Controllo Lunghezza Luogo [LL] - TC_UC4_4
-        if (!eventoDTO.getLuogo().matches("^[a-zA-Z0-9\\s,.-]{5,100}$")) {
-            throw new IllegalArgumentException("Errato: Indirizzo luogo non valido");
-        }
-
         // 5. Controllo Stato Organizzatore [SO] - TC_UC4_
         UtenteRegistrato organizzatore = utenteRepository.findById(emailOrganizzatore)
                 .orElseThrow(() -> new IllegalArgumentException("Errato: Organizzatore non valido"));
 
 
-        Double[] coordinate;
-        try {
-            coordinate = mappeFacade.getCoordinate(eventoDTO.getLuogo());
-        } catch (RuntimeException e) {
-            // Se il Facade fallisce (indirizzo non trovato dalle API), blocchiamo la creazione
-            throw new IllegalArgumentException("Indirizzo non trovato sulle mappe");
+        String indirizzoFinale;
+        Double latFinale;
+        Double lonFinale;
+
+        // CASO A: L'utente ha mandato le COORDINATE (Click su mappa)
+        if (eventoDTO.getLatitudine() != null && eventoDTO.getLongitudine() != null) {
+            latFinale = eventoDTO.getLatitudine();
+            lonFinale = eventoDTO.getLongitudine();
+
+            // Usiamo il Facade per ottenere l'indirizzo (Reverse Geocoding)
+            indirizzoFinale = mappeFacade.getIndirizzoDaCoordinate(latFinale, lonFinale);
+
+            // Qui NON serve validare la regex, perché l'indirizzo ce lo dà OpenStreetMap ed è fidato.
+        }
+
+        // CASO B: L'utente ha mandato l'INDIRIZZO (Testo)
+        else if (eventoDTO.getLuogo() != null) {
+
+            if (eventoDTO.getLuogo().length() < 5) {
+                throw new IllegalArgumentException("Errato: Indirizzo troppo breve o non valido");
+            }
+
+            indirizzoFinale = eventoDTO.getLuogo();
+
+            // Usiamo il Facade per ottenere le coordinate (Geocoding)
+            Double[] coordinate = mappeFacade.getCoordinate(indirizzoFinale);
+            latFinale = coordinate[0];
+            lonFinale = coordinate[1];
+        }
+
+        // CASO C: Non ha mandato niente
+        else {
+            throw new IllegalArgumentException("Errato: Devi inserire un luogo o selezionarlo sulla mappa.");
         }
 
         // Creazione Entity e settaggio stato iniziale (REQ6)
         EventoSportivo nuovoEvento = new EventoSportivo();
         nuovoEvento.setSport(eventoDTO.getSport());
         nuovoEvento.setDataOra(eventoDTO.getDataOra());
-        nuovoEvento.setLuogo(eventoDTO.getLuogo());
+        nuovoEvento.setLuogo(indirizzoFinale);
         nuovoEvento.setNPartMax(eventoDTO.getNPartMax());
         nuovoEvento.setOrganizzatore(organizzatore);
-        nuovoEvento.setLatitudine(coordinate[0]);
-        nuovoEvento.setLongitudine(coordinate[1]);
+        nuovoEvento.setLatitudine(latFinale);
+        nuovoEvento.setLongitudine(lonFinale);
         // Impostiamo lo stato iniziale come da Statechart (REQ6)
         nuovoEvento.setStato(StatoEvento.IN_ATTESA_DI_PARTECIPANTI);
         nuovoEvento.setNPartAttuali(0);
@@ -112,8 +137,12 @@ public class GestioneEventoService {
 
         for (Iscrizione iscrizione : osservatori) {
             UtenteRegistrato utente = iscrizione.getUtente();
-            // Simulazione invio notifica (Email/Push)
-            System.out.println("NOTIFICA a " + utente.getEmail() + ": L'evento è stato annullato.");
+
+            emailService.inviaEmail(
+                    utente.getEmail(),
+                    "Evento Annullato",
+                    "Ciao " + utente.getNome() + ", l'evento " + evento.getSport() + " è stato annullato."
+            );
         }
     }
 }

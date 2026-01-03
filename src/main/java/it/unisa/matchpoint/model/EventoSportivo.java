@@ -33,10 +33,10 @@ public class EventoSportivo {
 
     // --- LUOGO & GEOLOCALIZZAZIONE ---
 
-    @Column(nullable = false, length = 255) // SDD permette 255
-    // Validazione TCS più restrittiva (max 100, caratteri specifici)
-    @Pattern(regexp = "^[a-zA-Z0-9\\s,.-]{5,100}$")
+    @Column(nullable = false, length = 255)
+    @Pattern(regexp = ".{5,150}", message = "Indirizzo non valido o troppo lungo")
     private String luogo;
+
 
     // FIX ARCHITETTURALE: Aggiunta coordinate per REQ4 e REQ8 (Mappe/Filtri)
     // Non presenti in SDD originale, ma necessari per il funzionamento.
