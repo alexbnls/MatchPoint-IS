@@ -10,7 +10,7 @@ import lombok.*;
 @Table(
         name = "Feedback", // Nome entità definito nel System Design
         uniqueConstraints = {
-                // Implementazione vincolo TCS "Unicità Feedback" [cite: 1168]
+                // Implementazione vincolo TCS "Unicità Feedback"
                 // Un valutatore non può valutare lo stesso utente due volte per lo stesso evento
                 @UniqueConstraint(
                         name = "UniqueFeedbackPerUserAndEvent",
@@ -46,9 +46,7 @@ public class Feedback {
     @Min(1) @Max(5)
     private Double punteggioSportivita;
 
-    // --- CAMPO AGGIUNTO PER CORREZIONE INCONSISTENZA ---
-    // Presente nel RAD  e Mockup, mancante nel SDD.
-    // Impostato come NULLABLE perché definito "opzionale" nello Scenario SC_6[cite: 629].
+    // Impostato come NULLABLE perché definito "opzionale".
     @Column(name = "descrizione", length = 500)
     private String descrizione;
 
