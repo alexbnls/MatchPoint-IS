@@ -26,13 +26,13 @@ public class GestioneEventoService {
     private UtenteRepository utenteRepository;
 
     @Autowired
-    private MappeServiceFacade mappeFacade; // Il Design Pattern in azione
+    private MappeServiceFacade mappeFacade;
 
     @Autowired
-    private IscrizioneRepository iscrizioneRepository; // <--- SERVE PER L'OBSERVER!
+    private IscrizioneRepository iscrizioneRepository; // OBSERVER
 
     @Autowired
-    private EmailService emailService; // Iniettiamo l'interfaccia
+    private EmailService emailService;
 
     @Transactional
     public EventoSportivo creaEvento(EventoDTO eventoDTO, String emailOrganizzatore) {
@@ -90,7 +90,7 @@ public class GestioneEventoService {
             throw new IllegalArgumentException("Errato: Devi inserire un luogo o selezionarlo sulla mappa.");
         }
 
-        // Creazione Entity e settaggio stato iniziale (REQ6)
+        // Creazione Entity e settaggio stato iniziale
         EventoSportivo nuovoEvento = new EventoSportivo();
         nuovoEvento.setSport(eventoDTO.getSport());
         nuovoEvento.setDataOra(eventoDTO.getDataOra());
@@ -99,7 +99,7 @@ public class GestioneEventoService {
         nuovoEvento.setOrganizzatore(organizzatore);
         nuovoEvento.setLatitudine(latFinale);
         nuovoEvento.setLongitudine(lonFinale);
-        // Impostiamo lo stato iniziale come da Statechart (REQ6)
+        // Impostiamo lo stato iniziale come da Statechart
         nuovoEvento.setStato(StatoEvento.IN_ATTESA_DI_PARTECIPANTI);
         nuovoEvento.setNPartAttuali(0);
 
@@ -107,7 +107,7 @@ public class GestioneEventoService {
     }
 
     /**
-     * Implementazione REQ7 e Observer Pattern: Annullamento Evento.
+     * Implementazione Observer Pattern: Annullamento Evento.
      * Quando l'organizzatore annulla, il sistema deve notificare gli iscritti.
      */
     @Transactional
@@ -115,12 +115,10 @@ public class GestioneEventoService {
         EventoSportivo evento = eventoRepository.findById(idEvento)
                 .orElseThrow(() -> new IllegalArgumentException("Evento non trovato"));
 
-        // Verifica Security
         if (!evento.getOrganizzatore().getEmail().equals(emailRichiedente)) {
             throw new SecurityException("Non sei autorizzato ad annullare questo evento");
         }
 
-        // Verifica Stato
         if (evento.getStato() == StatoEvento.TERMINATO || evento.getStato() == StatoEvento.ANNULLATO) {
             throw new IllegalArgumentException("L'evento non può essere annullato in questo stato");
         }

@@ -65,7 +65,6 @@ class GestioneEventoServiceTest {
             service.creaEvento(dtoValido, "org@email.com");
         });
 
-        // CORREZIONE: Aggiornato con il messaggio reale del Service
         assertEquals("Errato: Data evento nel passato", ex.getMessage());
     }
 
@@ -78,7 +77,6 @@ class GestioneEventoServiceTest {
             service.creaEvento(dtoValido, "org@email.com");
         });
 
-        // Verifica anche qui per sicurezza
         assertEquals("Errato: Numero partecipanti insufficiente", ex.getMessage());
     }
 
@@ -100,7 +98,6 @@ class GestioneEventoServiceTest {
         // ARRANGE
         when(utenteRepository.findById("org@email.com")).thenReturn(Optional.of(organizzatore));
 
-        // Simuliamo che il Facade restituisca coordinate valide
         Double[] coordinateFittizie = {40.682, 14.768};
         when(mappeFacade.getCoordinate(dtoValido.getLuogo())).thenReturn(coordinateFittizie);
 

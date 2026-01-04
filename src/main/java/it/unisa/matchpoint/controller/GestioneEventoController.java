@@ -21,7 +21,7 @@ public class GestioneEventoController {
             EventoSportivo evento = eventoService.creaEvento(eventoDTO, emailOrganizzatore);
             return ResponseEntity.ok(evento);
         } catch (IllegalArgumentException e) {
-            // Cattura gli errori del Service (es. "Data nel passato") e risponde con 400 Bad Request
+            // Cattura gli errori del Service e risponde con 400 Bad Request
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }

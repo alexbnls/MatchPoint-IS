@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 
 // Nota: In un'implementazione reale, questa classe estenderebbe 'SubjectEvento'
 // come definito nel documento Design Pattern.
-// Qui includo la logica direttamente per completezza dell'Entity.
+// Qui includiamo la logica direttamente per completezza dell'Entity.
 
 @Entity
 @Table(name = "EventoSportivo") // Definito nel Dizionario Dati
@@ -42,10 +42,6 @@ public class EventoSportivo {
     @Pattern(regexp = ".{5,150}", message = "Indirizzo non valido o troppo lungo")
     private String luogo;
 
-
-    // FIX ARCHITETTURALE: Aggiunta coordinate per REQ4 e REQ8 (Mappe/Filtri)
-    // Non presenti in SDD originale, ma necessari per il funzionamento.
-    // Fix per latitudine e longitudine
     @Column(name = "latitudine", columnDefinition = "DECIMAL(9,6)")
     private Double latitudine;
 
@@ -80,7 +76,6 @@ public class EventoSportivo {
 
     /**
      * Override del setter di Lombok per implementare l'Observer Pattern.
-     * Come da documento Design Pattern:
      * "Quando lo stato cambia, invoca il metodo notificaOsservatori()."
      */
     public void setStato(StatoEvento nuovoStato) {
@@ -94,7 +89,7 @@ public class EventoSportivo {
 
     // Metodo stub per simulare la classe padre SubjectEvento
     private void notificaOsservatori() {
-        // Implementazione delegata al Service/Aspect o classe padre
+        // Implementazione delegata al Service o classe padre
         System.out.println("Notifica inviata agli osservatori per cambio stato evento: " + this.id);
     }
 }

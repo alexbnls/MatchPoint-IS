@@ -28,13 +28,12 @@ public class GestioneValutazioneService {
     private IscrizioneRepository iscrizioneRepository;
 
     /**
-     * Gestisce l'inserimento di un feedback secondo UC_2.
-     * Versione con Double.
+     * Gestisce l'inserimento di un feedback.
      */
     @Transactional
     public Feedback lasciaFeedback(Integer idEvento, String emailValutatore, String emailValutato, RatingDTO ratingDTO) {
 
-        // --- 1. VALIDAZIONE SELF-RATING (TC_UC2_1) ---
+        // --- 1. VALIDAZIONE RATING A SE STESSO (TC_UC2_1) ---
         if (emailValutatore.equals(emailValutato)) {
             throw new IllegalArgumentException("Non puoi valutare te stesso");
         }
@@ -85,7 +84,6 @@ public class GestioneValutazioneService {
         feedback.setValutatore(valutatore);
         feedback.setValutato(valutato);
 
-        // Assegnazione diretta dei Double
         feedback.setPunteggioAbilita(ratingDTO.getAbilita());
         feedback.setPunteggioAffidabilita(ratingDTO.getAffidabilita());
         feedback.setPunteggioSportivita(ratingDTO.getSportivita());
@@ -105,23 +103,30 @@ public class GestioneValutazioneService {
     }
 
     private void aggiornaMediaUtente(UtenteRegistrato utente, RatingDTO nuoviVoti) {
-        utente.setRatingAbilita(calcolaNuovaMedia(utente.getRatingAbilita(), nuoviVoti.getAbilita()));
-        utente.setRatingAffidabilita(calcolaNuovaMedia(utente.getRatingAffidabilita(), nuoviVoti.getAffidabilita()));
-        utente.setRatingSportivita(calcolaNuovaMedia(utente.getRatingSportivita(), nuoviVoti.getSportivita()));
+        // 1. Contiamo quanti feedback ha ricevuto INCLUSO quello appena salvato
+        long numeroTotaleFeedback = feedbackRepository.countByValutato(utente);
+
+        // 2. Calcoliamo le nuove medie usando il conteggio
+        utente.setRatingAbilita(calcolaMediaPonderata(utente.getRatingAbilita(), nuoviVoti.getAbilita(), numeroTotaleFeedback));
+        utente.setRatingAffidabilita(calcolaMediaPonderata(utente.getRatingAffidabilita(), nuoviVoti.getAffidabilita(), numeroTotaleFeedback));
+        utente.setRatingSportivita(calcolaMediaPonderata(utente.getRatingSportivita(), nuoviVoti.getSportivita(), numeroTotaleFeedback));
 
         utenteRepository.save(utente);
     }
 
-    private Double calcolaNuovaMedia(Double mediaAttuale, Double nuovoVoto) {
-        // Gestione null safety
+    private Double calcolaMediaPonderata(Double mediaAttuale, Double nuovoVoto, long numeroTotale) {
         if (mediaAttuale == null) mediaAttuale = 0.0;
 
-        // Se è la prima valutazione (media 0), ritorna direttamente il nuovo voto
-        if (mediaAttuale == 0.0) {
+        // Se è il primo feedback in assoluto (numeroTotale = 1)
+        if (numeroTotale <= 1) {
             return nuovoVoto;
         }
 
-        // Calcolo media mobile semplice: (Vecchia + Nuova) / 2
-        return (mediaAttuale + nuovoVoto) / 2.0;
+        double sommaPrecedente = mediaAttuale * (numeroTotale - 1);
+        double nuovaSomma = sommaPrecedente + nuovoVoto;
+
+        // Arrotondiamo a 2 cifre decimali per pulizia
+        double nuovaMedia = nuovaSomma / numeroTotale;
+        return Math.round(nuovaMedia * 100.0) / 100.0;
     }
 }

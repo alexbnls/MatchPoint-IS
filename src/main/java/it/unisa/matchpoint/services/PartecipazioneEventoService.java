@@ -23,7 +23,6 @@ public class PartecipazioneEventoService {
     private UtenteRepository utenteRepository;
 
     /**
-     * Implementazione UC_3: Iscrizione ad un evento.
      * Gestisce atomicamente il controllo posti e il salvataggio.
      */
     @Transactional

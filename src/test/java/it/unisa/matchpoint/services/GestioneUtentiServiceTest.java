@@ -24,7 +24,7 @@ class GestioneUtentiServiceTest {
     // Test Case: TC_UC1_4 (Email già in uso)
     @Test
     void registraUtente_EmailGiaEsistente_LanciaEccezione() {
-        // --- ARRANGE (Preparazione) ---
+        // --- ARRANGE ---
         UtenteDTO dto = new UtenteDTO();
         dto.setNome("Mario");
         dto.setCognome("Rossi");
@@ -32,21 +32,18 @@ class GestioneUtentiServiceTest {
         dto.setPassword("Password123");
         dto.setConfermaPassword("Password123");
 
-        // ISTRUZIONE MOCKITO:
-        // "Quando qualcuno chiama existsByEmail con questa mail, rispondi TRUE"
         when(utenteRepository.existsByEmail("mario.rossi@email.com")).thenReturn(true);
 
-        // --- ACT & ASSERT (Azione e Verifica) ---
-        // Ci aspettiamo che il service lanci IllegalArgumentException come scritto nel codice
+        // --- ACT & ASSERT ---
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
             gestioneUtentiService.registraUtente(dto);
         });
 
         assertEquals("Errato: Email già in uso", exception.getMessage());
 
-        // Verifica finale: controlliamo che il mock sia stato chiamato davvero una volta
+        // Controlliamo che il mock sia stato chiamato davvero una volta
         verify(utenteRepository, times(1)).existsByEmail("mario.rossi@email.com");
-        // Verifica che NON abbia provato a salvare nulla (visto che doveva fallire prima)
+        // Verifica che NON abbia provato a salvare nulla
         verify(utenteRepository, never()).save(any());
     }
 }

@@ -32,7 +32,6 @@ public class PartecipazioneEventoController {
             // Chiamata al Service (Business Logic)
             Iscrizione iscrizione = partecipazioneService.iscriviUtente(idEvento, emailUtente);
 
-            // Se tutto va bene, restituiamo 200 OK
             return ResponseEntity.ok(Map.of(
                     "messaggio", "Iscrizione completata con successo!",
                     "idIscrizione", iscrizione.getId(),
@@ -40,7 +39,6 @@ public class PartecipazioneEventoController {
             ));
 
         } catch (IllegalStateException e) {
-            // Se il service lancia un'eccezione (es. evento pieno o già iscritto),
             // restituiamo 400 Bad Request con il messaggio d'errore del service.
             return ResponseEntity.badRequest().body(Map.of("errore", e.getMessage()));
         } catch (Exception e) {

@@ -8,7 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-@Service // <--- Questo dice a Spring: "Caricami all'avvio!"
+@Service // Carica all'avvio
 public class MappeServiceFacadeImpl implements MappeServiceFacade {
 
     private final String BASE_URL = "https://nominatim.openstreetmap.org/search";
@@ -25,7 +25,7 @@ public class MappeServiceFacadeImpl implements MappeServiceFacade {
             // 2. Preparazione della richiesta
             RestTemplate restTemplate = new RestTemplate();
 
-            // IMPORTANTE: OpenStreetMap richiede un Header "User-Agent" per identificare l'app,
+            // OpenStreetMap richiede un Header "User-Agent" per identificare l'app,
             // altrimenti blocca la richiesta (errore 403).
             HttpHeaders headers = new HttpHeaders();
             headers.set("User-Agent", "MatchPoint-StudentProject/1.0");
@@ -57,7 +57,6 @@ public class MappeServiceFacadeImpl implements MappeServiceFacade {
             }
 
         } catch (Exception e) {
-            // Se c'è un errore di connessione o parsing, lanciamo un'eccezione gestita
             throw new IllegalArgumentException("Errore durante la geolocalizzazione: " + e.getMessage());
         }
     }
@@ -78,7 +77,7 @@ public class MappeServiceFacadeImpl implements MappeServiceFacade {
                     url,
                     HttpMethod.GET,
                     entity,
-                    NominatimResponseDTO.class // Nota: qui OSM restituisce un oggetto singolo, non un array!
+                    NominatimResponseDTO.class
             );
 
             NominatimResponseDTO risultato = response.getBody();
