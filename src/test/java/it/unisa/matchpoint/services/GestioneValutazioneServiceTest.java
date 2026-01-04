@@ -44,7 +44,6 @@ class GestioneValutazioneServiceTest {
 
     @BeforeEach
     void setUp() {
-        // Setup dati comuni
         valutatore = new UtenteRegistrato();
         valutatore.setEmail("mario@email.com");
 
@@ -60,7 +59,7 @@ class GestioneValutazioneServiceTest {
         // Evento nel passato (valido per feedback)
         evento.setDataOra(LocalDateTime.now().minusDays(1));
 
-        // DTO con i voti (Double)
+        // DTO con i voti
         ratingDTO = new RatingDTO(
                 4.0, // Abilità
                 5.0, // Affidabilità
@@ -116,15 +115,12 @@ class GestioneValutazioneServiceTest {
     // --- TEST CASE: TC_UC2_4 (Feedback Duplicato) ---
     @Test
     void lasciaFeedback_GiaPresente_LanciaEccezione() {
-        // Mock: Evento e Utenti esistono
         when(eventoRepository.findById(1)).thenReturn(Optional.of(evento));
         when(utenteRepository.findById("mario@email.com")).thenReturn(Optional.of(valutatore));
         when(utenteRepository.findById("luigi@email.com")).thenReturn(Optional.of(valutato));
 
-        // Mock: Partecipazione OK
         when(iscrizioneRepository.existsByEventoIdAndUtenteEmail(anyInt(), anyString())).thenReturn(true);
 
-        // Mock: Feedback GIÀ ESISTENTE -> TRUE
         when(feedbackRepository.existsByEventoIdAndValutatoreEmailAndValutatoEmail(1, "mario@email.com", "luigi@email.com"))
                 .thenReturn(true);
 
@@ -138,7 +134,6 @@ class GestioneValutazioneServiceTest {
     // --- TEST CASE: TC_UC2_3 (Range Punteggi Errato) ---
     @Test
     void lasciaFeedback_PunteggioFuoriRange_LanciaEccezione() {
-        // Mock basilari per arrivare al controllo punteggi
         when(eventoRepository.findById(1)).thenReturn(Optional.of(evento));
         when(utenteRepository.findById("mario@email.com")).thenReturn(Optional.of(valutatore));
         when(utenteRepository.findById("luigi@email.com")).thenReturn(Optional.of(valutato));
@@ -158,7 +153,6 @@ class GestioneValutazioneServiceTest {
     // --- TEST CASE: TC_UC2_OK (Inserimento Valido) ---
     @Test
     void lasciaFeedback_DatiValidi_SalvaCorrettamente() {
-        // Mock: Tutto perfetto
         when(eventoRepository.findById(1)).thenReturn(Optional.of(evento));
         when(utenteRepository.findById("mario@email.com")).thenReturn(Optional.of(valutatore));
         when(utenteRepository.findById("luigi@email.com")).thenReturn(Optional.of(valutato));
@@ -170,10 +164,10 @@ class GestioneValutazioneServiceTest {
         // Esecuzione
         service.lasciaFeedback(1, "mario@email.com", "luigi@email.com", ratingDTO);
 
-        // Verifica: Il repository save() è stato chiamato per il Feedback?
+        // Il repository save() è stato chiamato per il Feedback?
         verify(feedbackRepository, times(1)).save(any());
 
-        // Verifica: La media utente è stata aggiornata (repository save utente)?
+        // La media utente è stata aggiornata (repository save utente)?
         verify(utenteRepository, times(1)).save(valutato);
     }
 }

@@ -20,14 +20,13 @@ public class GestioneValutazioneController {
     private GestioneValutazioneService valutazioneService;
 
     /**
-     * Endpoint per lasciare un feedback su un giocatore (UC_2).
      * Riceve un JSON complesso con i dati dell'evento, degli utenti e i voti.
      */
     @PostMapping("/lascia-feedback")
     public ResponseEntity<?> lasciaFeedback(@RequestBody Map<String, Object> payload) {
         try {
             // 1. Estrazione Parametri dalla richiesta JSON
-            // Nota: "payload.get" restituisce Object, quindi dobbiamo fare il casting
+            // "payload.get" restituisce Object, quindi dobbiamo fare il casting
             Integer idEvento = (Integer) payload.get("idEvento");
             String emailValutatore = (String) payload.get("emailValutatore");
             String emailValutato = (String) payload.get("emailValutato");
@@ -60,13 +59,12 @@ public class GestioneValutazioneController {
             // Gestisce errori di validazione (es. voti fuori range, utente non iscritto, ecc.)
             return ResponseEntity.badRequest().body(Map.of("errore", e.getMessage()));
         } catch (Exception e) {
-            e.printStackTrace(); // Utile per debuggare in fase di sviluppo
+            e.printStackTrace();
             return ResponseEntity.internalServerError().body(Map.of("errore", "Errore interno del server."));
         }
     }
 
     // Metodo helper per gestire la conversione da JSON number a Double in modo sicuro
-    // (Jackson a volte deserializza i numeri interi come Integer, che fa crashare un cast diretto a Double)
     private Double convertToDouble(Object value) {
         if (value == null) return null;
         if (value instanceof Integer) return ((Integer) value).doubleValue();

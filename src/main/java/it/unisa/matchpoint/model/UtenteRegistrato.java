@@ -18,7 +18,7 @@ public class UtenteRegistrato {
 
     @Id // L'email è la Primary Key
     @Column(length = 320, nullable = false)
-    // Regex validazione email da specifica Test Case [cite: 20]
+    // Regex validazione email da specifica Test Case
     @Pattern(regexp = "^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,10}$")
     private String email;
 
@@ -26,17 +26,17 @@ public class UtenteRegistrato {
     private String password;
 
     @Column(nullable = false, length = 50) // Lunghezza da Dizionario Dati
-    // Regex validazione nome da specifica Test Case [cite: 18]
+    // Regex validazione nome da specifica Test Case
     @Pattern(regexp = "^[A-Za-z\\s']{2,30}$")
     private String nome;
 
     @Column(nullable = false, length = 50) // Lunghezza da Dizionario Dati
-    // Regex validazione cognome da specifica Test Case [cite: 19]
+    // Regex validazione cognome da specifica Test Case
     @Pattern(regexp = "^[A-Za-z\\s']{2,30}$")
     private String cognome;
 
     @Column(name = "ubicazione_predefinita", length = 100)
-    private String ubicazionePred; // Preferenza indicata nel RAD [cite: 159]
+    private String ubicazionePred; // Preferenza indicata nel RAD
 
     // Rating con valori di default 0.0
     // Usiamo columnDefinition per forzare il database a creare un DECIMAL(2,1)

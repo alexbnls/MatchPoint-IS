@@ -60,12 +60,10 @@ class PartecipazioneEventoServiceTest {
         // Simuliamo che esista già una riga nella tabella Iscrizione
         when(iscrizioneRepository.existsByEventoIdAndUtenteEmail(1, "player@email.com")).thenReturn(true);
 
-        // MODIFICA: Ci aspettiamo IllegalStateException, non IllegalArgumentException
         IllegalStateException ex = assertThrows(IllegalStateException.class, () -> {
             service.iscriviUtente(1, "player@email.com");
         });
 
-        // Verifica che il messaggio sia quello visto nel log
         assertEquals("Errato: Utente già iscritto all'evento", ex.getMessage());
     }
 
@@ -77,12 +75,10 @@ class PartecipazioneEventoServiceTest {
         when(eventoRepository.findById(1)).thenReturn(Optional.of(evento));
         when(utenteRepository.findById("player@email.com")).thenReturn(Optional.of(utente));
 
-        // MODIFICA: Ci aspettiamo IllegalStateException
         IllegalStateException ex = assertThrows(IllegalStateException.class, () -> {
             service.iscriviUtente(1, "player@email.com");
         });
 
-        // Verifica che il messaggio sia quello visto nel log
         assertEquals("Errato: Posti esauriti", ex.getMessage());
     }
 
@@ -103,8 +99,8 @@ class PartecipazioneEventoServiceTest {
         // ASSERT
         // 1. Verifichiamo che l'evento sia stato salvato con i nuovi dati
         verify(eventoRepository).save(argThat(evt ->
-                evt.getNPartAttuali() == 10 &&       // Contatore incrementato
-                        evt.getStato() == StatoEvento.CONFERMATO // Stato cambiato!
+                evt.getNPartAttuali() == 10 &&
+                        evt.getStato() == StatoEvento.CONFERMATO
         ));
 
         // 2. Verifichiamo che l'iscrizione sia stata creata
