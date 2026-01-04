@@ -40,8 +40,3 @@ public class Iscrizione {
     private UtenteRegistrato utente;
 }
 
-enum StatoIscrizione {
-    IN_ATTESA,
-    CONFERMATO,
-    ANNULLATO
-}

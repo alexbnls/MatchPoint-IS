@@ -39,7 +39,7 @@ public class PartecipazioneEventoController {
                     "statoEvento", iscrizione.getEvento().getStato()
             ));
 
-        } catch (IllegalArgumentException e) {
+        } catch (IllegalStateException e) {
             // Se il service lancia un'eccezione (es. evento pieno o già iscritto),
             // restituiamo 400 Bad Request con il messaggio d'errore del service.
             return ResponseEntity.badRequest().body(Map.of("errore", e.getMessage()));

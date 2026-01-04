@@ -1,9 +1,6 @@
 package it.unisa.matchpoint.services;
 
-import it.unisa.matchpoint.model.EventoSportivo;
-import it.unisa.matchpoint.model.Iscrizione;
-import it.unisa.matchpoint.model.StatoEvento;
-import it.unisa.matchpoint.model.UtenteRegistrato;
+import it.unisa.matchpoint.model.*;
 import it.unisa.matchpoint.repository.EventoRepository;
 import it.unisa.matchpoint.repository.IscrizioneRepository;
 import it.unisa.matchpoint.repository.UtenteRepository;
@@ -77,7 +74,7 @@ public class PartecipazioneEventoService {
         nuovaIscrizione.setEvento(evento);
         nuovaIscrizione.setUtente(utente); // Assumendo che Iscrizione abbia il campo Utente (FK)
         nuovaIscrizione.setDataIscrizione(LocalDateTime.now());
-        // nuovaIscrizione.setStato(...); // Se previsto un enum stato iscrizione
+        nuovaIscrizione.setStato(StatoIscrizione.CONFERMATO);
 
         return iscrizioneRepository.save(nuovaIscrizione);
     }
