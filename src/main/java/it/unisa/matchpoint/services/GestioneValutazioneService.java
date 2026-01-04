@@ -3,6 +3,7 @@ package it.unisa.matchpoint.services;
 import it.unisa.matchpoint.dto.RatingDTO;
 import it.unisa.matchpoint.model.EventoSportivo;
 import it.unisa.matchpoint.model.Feedback;
+import it.unisa.matchpoint.model.StatoEvento;
 import it.unisa.matchpoint.model.UtenteRegistrato;
 import it.unisa.matchpoint.repository.EventoRepository;
 import it.unisa.matchpoint.repository.FeedbackRepository;
@@ -53,6 +54,10 @@ public class GestioneValutazioneService {
             throw new IllegalArgumentException("Non puoi lasciare feedback per un evento futuro");
         }
 
+        if (evento.getStato() == StatoEvento.ANNULLATO) {
+            throw new IllegalArgumentException("Impossibile lasciare feedback: L'evento è stato annullato.");
+        }
+
         // --- 4. VALIDAZIONE PARTECIPAZIONE ---
         boolean isValutatoreIscritto = iscrizioneRepository.existsByEventoIdAndUtenteEmail(idEvento, emailValutatore);
         boolean isValutatoIscritto = iscrizioneRepository.existsByEventoIdAndUtenteEmail(idEvento, emailValutato);
@@ -62,7 +67,7 @@ public class GestioneValutazioneService {
         }
 
         // --- 5. VALIDAZIONE UNICITÀ (TC_UC2_4) ---
-        if (feedbackRepository.existsByEventoIdAndValutatoreAndValutato(idEvento, emailValutatore, emailValutato)) {
+        if (feedbackRepository.existsByEventoIdAndValutatoreEmailAndValutatoEmail(idEvento, emailValutatore, emailValutato)) {
             throw new IllegalArgumentException("Hai già valutato questo utente per questo evento");
         }
 

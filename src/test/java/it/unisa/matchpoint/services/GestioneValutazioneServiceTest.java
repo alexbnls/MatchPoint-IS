@@ -125,7 +125,7 @@ class GestioneValutazioneServiceTest {
         when(iscrizioneRepository.existsByEventoIdAndUtenteEmail(anyInt(), anyString())).thenReturn(true);
 
         // Mock: Feedback GIÀ ESISTENTE -> TRUE
-        when(feedbackRepository.existsByEventoIdAndValutatoreAndValutato(1, "mario@email.com", "luigi@email.com"))
+        when(feedbackRepository.existsByEventoIdAndValutatoreEmailAndValutatoEmail(1, "mario@email.com", "luigi@email.com"))
                 .thenReturn(true);
 
         IllegalArgumentException ex = assertThrows(IllegalArgumentException.class, () -> {
@@ -143,7 +143,7 @@ class GestioneValutazioneServiceTest {
         when(utenteRepository.findById("mario@email.com")).thenReturn(Optional.of(valutatore));
         when(utenteRepository.findById("luigi@email.com")).thenReturn(Optional.of(valutato));
         when(iscrizioneRepository.existsByEventoIdAndUtenteEmail(anyInt(), anyString())).thenReturn(true);
-        when(feedbackRepository.existsByEventoIdAndValutatoreAndValutato(anyInt(), anyString(), anyString())).thenReturn(false);
+        when(feedbackRepository.existsByEventoIdAndValutatoreEmailAndValutatoEmail(anyInt(), anyString(), anyString())).thenReturn(false);
 
         // Impostiamo un voto invalido (6.0)
         ratingDTO.setAbilita(6.0);
@@ -164,7 +164,7 @@ class GestioneValutazioneServiceTest {
         when(utenteRepository.findById("luigi@email.com")).thenReturn(Optional.of(valutato));
 
         when(iscrizioneRepository.existsByEventoIdAndUtenteEmail(anyInt(), anyString())).thenReturn(true);
-        when(feedbackRepository.existsByEventoIdAndValutatoreAndValutato(anyInt(), anyString(), anyString()))
+        when(feedbackRepository.existsByEventoIdAndValutatoreEmailAndValutatoEmail(anyInt(), anyString(), anyString()))
                 .thenReturn(false); // Non esiste ancora
 
         // Esecuzione

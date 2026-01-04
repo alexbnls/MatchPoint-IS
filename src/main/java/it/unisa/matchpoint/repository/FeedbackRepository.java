@@ -7,5 +7,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface FeedbackRepository extends JpaRepository<Feedback, Integer> {
     // Serve per il vincolo TCS "Unicità Feedback"
-    boolean existsByEventoIdAndValutatoreAndValutato(Integer evento_id, String emailValutatore, String emailValutato);
+    boolean existsByEventoIdAndValutatoreEmailAndValutatoEmail(Integer evento_id, String emailValutatore, String emailValutato);
 }
