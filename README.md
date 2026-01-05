@@ -1,5 +1,5 @@
-<div>
-  <img src="docs/logo_matchpoint.png" alt="MatchPoint Logo" width="400">
+<div align="center">
+  <img src="docs/logo_matchpoint.png" alt="MatchPoint Logo" width="600">
 </div>
 
 **Piattaforma per l'organizzazione e la gestione di eventi sportivi amatoriali.**
@@ -54,7 +54,7 @@ MatchPoint è un sistema software progettato per connettere appassionati di spor
 
 ## Architettura e Design Pattern
 
-Il progetto segue un'architettura a tre livelli (**Controller - Service - Repository**) per garantire la separazione delle responsabilità. Sono stati implementati i seguenti **Design Pattern**:
+Il progetto segue un'architettura a tre livelli (**Interface - Application - Storage**) per garantire la separazione delle responsabilità. Sono stati implementati i seguenti **Design Pattern**:
 
 ### 1. Facade Pattern (`MappeServiceFacade`)
 Utilizzato per isolare la complessità dell'interazione con le API esterne di **OpenStreetMap (Nominatim)**. Il sistema non dipende direttamente dalle chiamate HTTP, ma da un'interfaccia semplificata.
