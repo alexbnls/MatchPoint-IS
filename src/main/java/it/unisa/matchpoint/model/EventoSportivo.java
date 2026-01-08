@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
-// Nota: In un'implementazione reale, questa classe estenderebbe 'SubjectEvento'
+// In un'implementazione reale, questa classe estenderebbe 'SubjectEvento'
 // come definito nel documento Design Pattern.
 // Qui includiamo la logica direttamente per completezza dell'Entity.
 
