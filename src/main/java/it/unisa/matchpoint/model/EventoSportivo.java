@@ -72,25 +72,5 @@ public class EventoSportivo {
     @JoinColumn(name = "organizzatore", referencedColumnName = "email", nullable = false)
     private UtenteRegistrato organizzatore; // FK definita in SDD
 
-    // --- LOGICA DESIGN PATTERN (OBSERVER) ---
-
-    /**
-     * Override del setter di Lombok per implementare l'Observer Pattern.
-     * "Quando lo stato cambia, invoca il metodo notificaOsservatori()."
-     */
-    public void setStato(StatoEvento nuovoStato) {
-        this.stato = nuovoStato;
-
-        // Logica Observer: se l'evento viene annullato, notifica gli iscritti.
-        if (nuovoStato == StatoEvento.ANNULLATO) {
-            notificaOsservatori();
-        }
-    }
-
-    // Metodo stub per simulare la classe padre SubjectEvento
-    private void notificaOsservatori() {
-        // Implementazione delegata al Service o classe padre
-        System.out.println("Notifica inviata agli osservatori per cambio stato evento: " + this.id);
-    }
 }
 
