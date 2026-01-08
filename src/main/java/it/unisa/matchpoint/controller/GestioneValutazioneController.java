@@ -32,7 +32,7 @@ public class GestioneValutazioneController {
             String emailValutato = (String) payload.get("emailValutato");
 
             // Estrazione dei voti (gestendo il fatto che JSON potrebbe mandarli come Integer o Double)
-            // Usiamo un helper o convertiamo a Double in modo sicuro
+            // Usiamo un helper o convertiamo a Double
             Double abilita = convertToDouble(payload.get("abilita"));
             Double affidabilita = convertToDouble(payload.get("affidabilita"));
             Double sportivita = convertToDouble(payload.get("sportivita"));
