@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "UtenteRegistrato") // Nome entità definito nel System Design
-@Data // Genera getter, setter e costruttori tramite Lombok
+@Data // getter, setter e costruttori tramite Lombok
 @NoArgsConstructor
 @AllArgsConstructor
 public class UtenteRegistrato {
@@ -25,18 +25,18 @@ public class UtenteRegistrato {
     @Column(nullable = false)
     private String password;
 
-    @Column(nullable = false, length = 50) // Lunghezza da Dizionario Dati
+    @Column(nullable = false, length = 50)
     // Regex validazione nome da specifica Test Case
     @Pattern(regexp = "^[A-Za-z\\s']{2,30}$")
     private String nome;
 
-    @Column(nullable = false, length = 50) // Lunghezza da Dizionario Dati
+    @Column(nullable = false, length = 50)
     // Regex validazione cognome da specifica Test Case
     @Pattern(regexp = "^[A-Za-z\\s']{2,30}$")
     private String cognome;
 
     @Column(name = "ubicazione_predefinita", length = 100)
-    private String ubicazionePred; // Preferenza indicata nel RAD
+    private String ubicazionePred;
 
     // Rating con valori di default 0.0
     // Usiamo columnDefinition per forzare il database a creare un DECIMAL(2,1)

@@ -22,6 +22,21 @@ public class GestioneValutazioneController {
     @PostMapping("/lascia-feedback")
     public ResponseEntity<?> lasciaFeedbac(@RequestBody RatingDTO ratingDTO, @RequestParam Integer idEvento, @RequestParam String emailValutatore, @RequestParam String emailValutato) {
         try {
+            // 1. Estrazione Parametri dalla richiesta JSON
+            // "payload.get" restituisce Object, quindi dobbiamo fare il casting
+            Integer idEvento = (Integer) payload.get("idEvento");
+            String emailValutatore = (String) payload.get("emailValutatore");
+            String emailValutato = (String) payload.get("emailValutato");
+
+            // Estrazione dei voti (gestendo il fatto che JSON potrebbe mandarli come Integer o Double)
+            // Usiamo un helper o convertiamo a Double
+            Double abilita = convertToDouble(payload.get("abilita"));
+            Double affidabilita = convertToDouble(payload.get("affidabilita"));
+            Double sportivita = convertToDouble(payload.get("sportivita"));
+            String descrizione = (String) payload.get("descrizione");
+
+            // 2. Creazione del DTO
+            RatingDTO ratingDTO = new RatingDTO(abilita, affidabilita, sportivita, descrizione);
 
             // 3. Validazione preliminare dei campi obbligatori (se nulli, inutile chiamare il service)
             if (idEvento == null || emailValutatore == null || emailValutato == null) {

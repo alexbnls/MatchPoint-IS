@@ -23,7 +23,6 @@ public class Messaggio {
 
     // Nel SDD il tipo è "Text". In MySQL questo va mappato esplicitamente
     // o con @Lob, altrimenti JPA crea un Varchar(255).
-    // Uso columnDefinition come richiesto per coerenza.
     @Column(nullable = false, columnDefinition = "TEXT")
     @NotBlank
     private String testo;
