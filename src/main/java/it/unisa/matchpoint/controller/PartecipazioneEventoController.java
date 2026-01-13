@@ -4,10 +4,7 @@ import it.unisa.matchpoint.model.Iscrizione;
 import it.unisa.matchpoint.services.PartecipazioneEventoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 
@@ -19,11 +16,8 @@ public class PartecipazioneEventoController {
     private PartecipazioneEventoService partecipazioneService;
 
     @PostMapping("/iscriviti")
-    public ResponseEntity<?> iscriviti(@RequestBody Map<String, Object> payload) {
+    public ResponseEntity<?> iscriviti(@RequestParam Integer idEvento, @RequestParam String emailUtente) {
         try {
-            // Estraiamo i dati dal corpo della richiesta JSON
-            Integer idEvento = (Integer) payload.get("idEvento");
-            String emailUtente = (String) payload.get("emailUtente");
 
             if (idEvento == null || emailUtente == null) {
                 return ResponseEntity.badRequest().body("Dati mancanti: idEvento e emailUtente sono richiesti.");

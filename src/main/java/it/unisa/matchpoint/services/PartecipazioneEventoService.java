@@ -54,7 +54,7 @@ public class PartecipazioneEventoService {
 
         // 4. Controllo Validità Temporale [VT] - TC_UC3_4
         if (evento.getDataOra().isBefore(LocalDateTime.now())) {
-            throw new IllegalArgumentException("Errato: Data evento passata");
+            throw new IllegalStateException("Errato: Data evento passata");
         }
 
         // --- Se tutti i controlli passano, eseguiamo l'iscrizione (Transazione Atomica) ---
